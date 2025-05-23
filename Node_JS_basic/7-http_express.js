@@ -1,9 +1,9 @@
-import express from 'express';
-import { readFile } from 'fs';
+const express = require('express');
+const fs = require('fs');
 
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    readFile(path, 'utf8', (error, data) => {
+    fs.readFile(path, 'utf8', (error, data) => {
       if (error) {
         reject(new Error('Cannot load the database'));
         return;
@@ -58,4 +58,4 @@ app.get('/students', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
-export default app;
+module.exports = app;

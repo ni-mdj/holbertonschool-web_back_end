@@ -1,9 +1,9 @@
-const http = require('http');
-const fs = require('fs');
+import { createServer } from 'http';
+import { readFile } from 'fs';
 
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (error, data) => {
+    readFile(path, 'utf8', (error, data) => {
       if (error) {
         reject(new Error('Cannot load the database'));
         return;
@@ -37,7 +37,7 @@ function countStudents(path) {
   });
 }
 const dbPath = process.argv[2];
-const app = http.createServer((req, res) => {
+const app = createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
@@ -59,4 +59,4 @@ const app = http.createServer((req, res) => {
 app.listen(1245, () => {
   console.log('Server running at http://localhost:1245/');
 });
-module.exports = app;
+export default app;

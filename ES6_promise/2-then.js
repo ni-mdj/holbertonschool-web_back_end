@@ -1,13 +1,9 @@
-// utlisiation function prototype
-export default function getFullResponseFromAPI(success) {
-    return new Promise((resolve, reject) => {
-      if (success) {
-        resolve({ status: 200, body: 'Success' });
-      } else {
-        reject(new Error('Got a response from the API'));
-      }
-    });
-  }
-  if (error) {
-    resolve ('Got a response from the API');
+// Gère une Promise : retourne un objet si success, une erreur sinon, et loggue toujours un message
+export default function handleResponseFromAPI(promise) {
+    return promise
+      .then(() => ({ status: 200, body: 'success' }))
+      .catch(() => new Error())
+      .finally(() => {
+        console.log('Got a response from the API');
+      });
   }

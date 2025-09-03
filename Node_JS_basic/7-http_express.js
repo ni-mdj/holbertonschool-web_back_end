@@ -9,7 +9,7 @@
  * - Le fichier CSV est passé en argument lors de l'exécution :
  *     node 7-http_express.js database.csv
  *
- * Le module exporte la variable `app` pour permettre les tests automatiques.
+ *  module exporte la variable `app` pour permettre les tests automatiques.
  */
 const express = require('express');
 const fs = require('fs');

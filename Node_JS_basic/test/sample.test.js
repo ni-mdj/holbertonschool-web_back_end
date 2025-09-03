@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-describe('Sample test', () => {
+describe('sample test', () => {
   it('should return true', () => {
     expect(true).to.equal(true);
   });

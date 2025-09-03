@@ -1,4 +1,13 @@
-// http module et serveur HTTP natif avec routage et intégration de la fonction asynchrone countStudents
+/**
+ * http
+ *
+ * Petit serveur HTTP natif avec Node.js :
+ * - Route "/" → "Hello Holberton School!"
+ * - Route "/students" → affiche la liste des étudiants depuis la base CSV
+ * - Gestion des erreurs si le fichier n'est pas accessible
+ * - Écoute sur le port 1245
+ */
+
 const http = require('http');
 const fs = require('fs');
 
@@ -9,38 +18,41 @@ function countStudents(path) {
         reject(new Error('Cannot load the database'));
         return;
       }
+
+      const lines = data.split('\n').filter((line) => line.trim() !== '');
+      if (lines.length <= 1) {
+        resolve(['Number of students: 0']);
+        return;
+      }
+
+      const students = lines.slice(1).map((line) => line.split(','));
       const messages = [];
-      let message;
-      const content = data.toString().split('\n');
-      let students = content.filter((item) => item);
-      students = students.map((item) => item.split(','));
-      const nStudents = students.length ? students.length - 1 : 0;
-      message = `Number of students: ${nStudents}`;
-      messages.push(message);
-      const subjects = {};
-      for (const i in students) {
-        if (i !== 0) {
-          if (!subjects[students[i][3]]) subjects[students[i][3]] = [];
-          subjects[students[i][3]].push(students[i][0]);
+      messages.push(`Number of students: ${students.length}`);
+
+      const fields = {};
+      for (const student of students) {
+        const firstname = student[0];
+        const field = student[3];
+        if (field) {
+          if (!fields[field]) fields[field] = [];
+          fields[field].push(firstname);
         }
       }
-      delete subjects.field;
-      for (const key of Object.keys(subjects)) {
-        if (key && key !== 'undefined') {
-          message = `Number of students in ${key}: ${
-            subjects[key].length
-          }. List: ${subjects[key].join(', ')}`;
-          messages.push(message);
-        }
+
+      for (const [field, list] of Object.entries(fields)) {
+        messages.push(`Number of students in ${field}: ${list.length}. List: ${list.join(', ')}`);
       }
+
       resolve(messages);
     });
   });
 }
+
 const dbPath = process.argv[2];
 const app = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
+
   if (req.url === '/') {
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
@@ -50,14 +62,14 @@ const app = http.createServer((req, res) => {
         res.end(messages.join('\n'));
       })
       .catch((error) => {
-        res.end(`${error.message}`);
+        res.end(error.message);
       });
   } else {
     res.statusCode = 404;
     res.end('Not found');
   }
 });
-app.listen(1245, () => {
-  console.log('Server running at http://localhost:1245/');
-});
+
+app.listen(1245);
+
 module.exports = app;

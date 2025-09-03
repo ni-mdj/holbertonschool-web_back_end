@@ -1,5 +1,5 @@
-// cré fonction displaymessage qui affiche un message avec console.log
+// 0-console.js
 function displayMessage(message) {
     console.log(message);
   }
-  export default displayMessage;
+  module.exports = displayMessage;  
